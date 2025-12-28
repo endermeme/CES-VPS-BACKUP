@@ -19,7 +19,6 @@ Bash script tự động backup files/directories, databases (MySQL/PostgreSQL) 
 ```bash
 sudo apt update
 sudo apt install -y rsync tar gzip curl
-putang inamo
 # Tùy chọn: cho hiệu năng cao (khuyên dùng)
 sudo apt install -y zstd pigz
 
