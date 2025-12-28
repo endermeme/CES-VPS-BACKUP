@@ -1,0 +1,20 @@
+[Unit]
+Description=Backup Script Timer
+Requires=backup.service
+Documentation=file:///opt/backup-script/README.md
+
+[Timer]
+# Run daily at 2:00 AM
+OnCalendar=*-*-* 02:00:00
+
+# If missed (server was off), run on next boot
+Persistent=true
+
+# Random delay 0-30 minutes to avoid load spikes
+RandomizedDelaySec=30min
+
+# Accuracy (how precise the timer should be)
+AccuracySec=10min
+
+[Install]
+WantedBy=timers.target

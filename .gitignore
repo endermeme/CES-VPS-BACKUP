@@ -1,0 +1,13 @@
+# Sensitive configuration
+.env
+
+# Runtime files
+logs/
+*.tar.gz
+
+# Database dumps
+*.sql
+
+# Temporary files
+*.tmp
+tmp/

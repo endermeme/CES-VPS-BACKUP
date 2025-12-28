@@ -1,0 +1,34 @@
+[Unit]
+Description=Backup Script Service
+After=network-online.target
+Wants=network-online.target
+Documentation=file:///opt/backup-script/README.md
+
+[Service]
+Type=oneshot
+User=backup
+Group=backup
+WorkingDirectory=/opt/backup-script
+ExecStart=/opt/backup-script/backup.sh
+
+# Restart on failure
+Restart=on-failure
+RestartSec=300
+StartLimitBurst=2
+StartLimitIntervalSec=600
+
+# Resource limits
+Nice=19
+CPUQuota=50%
+MemoryLimit=1G
+
+# Timeout
+TimeoutStartSec=3600
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=backup-script
+
+[Install]
+WantedBy=multi-user.target

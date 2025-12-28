@@ -1,0 +1,50 @@
+# ============================================================
+# BACKUP CONFIGURATION FILE
+# ============================================================
+# File này định nghĩa những gì cần backup và những gì cần bỏ qua.
+# Hỗ trợ dấu * (wildcard) để chọn nhiều file/thư mục.
+
+# ------------------------------------------------------------
+# [TARGETS]
+# Danh sách các file hoặc thư mục CẦN BACKUP
+# ------------------------------------------------------------
+[TARGETS]
+
+# Ví dụ: Backup toàn bộ code web
+/var/www/html
+
+# Ví dụ: Backup cấu hình Nginx
+/etc/nginx/sites-available
+
+# Ví dụ: Backup tất cả các dự án trong thư mục projects
+# Dấu * sẽ lấy tất cả thư mục con bên trong
+/home/user/projects/*
+
+# Ví dụ: Backup một file cụ thể
+/home/user/secret.txt
+
+
+# ------------------------------------------------------------
+# [EXCLUDES]
+# Danh sách các file hoặc thư mục CẦN BỎ QUA (Không backup)
+# Giúp giảm dung lượng file backup
+# ------------------------------------------------------------
+[EXCLUDES]
+
+# Bỏ qua các file log
+*.log
+*.gz
+*.zip
+
+# Bỏ qua thư mục code rác
+node_modules
+vendor
+.git
+.idea
+.vscode
+
+# Bỏ qua file tạm hệ thống
+.DS_Store
+Thumbs.db
+tmp/
+temp/
