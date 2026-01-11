@@ -90,7 +90,7 @@ telegram_notify() {
 }
 
 notify_backup_start() {
-  local targets_count=$(echo "$BACKUP_TARGETS" | wc -w)
+  local targets_count=$(echo "${BACKUP_TARGETS:-}" | wc -w)
   local db_status="disabled"
   [[ "${DB_BACKUP_ENABLED:-false}" == "true" ]] && db_status="enabled"
 
@@ -574,12 +574,11 @@ transfer_to_server() {
   local auth="$6"
 
   local start_time=$(date +%s)
-  local ssh_opts="-o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=30 -p $port"
-  local rsync_ssh="ssh $ssh_opts"
+  local rsync_ssh=""
 
   # Build SSH command based on auth type
   if [[ "$auth" =~ ^password: ]]; then
-    # Password auth
+    # Password auth - DO NOT use BatchMode (it disables password prompts)
     local password="${auth#password:}"
     if ! command -v sshpass &>/dev/null; then
       log_error "[$label] sshpass not installed (required for password auth)"
@@ -587,10 +586,11 @@ transfer_to_server() {
       notify_server_status "$label" "failed" "0" "sshpass not installed"
       return 1
     fi
+    local ssh_opts="-o StrictHostKeyChecking=accept-new -o ConnectTimeout=30 -p $port"
     rsync_ssh="sshpass -p '$password' ssh $ssh_opts"
     log_debug "[$label] Using password auth"
   else
-    # SSH key auth
+    # SSH key auth - use BatchMode to prevent password prompts
     local key_path="$auth"
     key_path="${key_path/#\~/$HOME}"
     if [[ ! -f "$key_path" ]]; then
@@ -599,6 +599,7 @@ transfer_to_server() {
       notify_server_status "$label" "failed" "0" "SSH key not found: $key_path"
       return 1
     fi
+    local ssh_opts="-o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=30 -p $port"
     rsync_ssh="ssh -i $key_path $ssh_opts"
     log_debug "[$label] Using SSH key: $key_path"
   fi
